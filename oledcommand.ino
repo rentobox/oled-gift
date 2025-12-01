@@ -22,8 +22,8 @@
 
 // declaring the connection for SDD1306 display with I2C
 #define OLED_RESET -1  
-Adafruit_SSD1306 oledOne(SCREEN_WIDTH, SCREEN_HEIGHT. &Wire, OLED_RESET);
-Adafruit_SSD1306 oledTwo(SCREEN_WIDTH, SCREEN_HEIGHT. &Wire, OLED_RESET);
+Adafruit_SSD1306 oledOne(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+Adafruit_SSD1306 oledTwo(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 
 //      === WIFI AND TIME CONFIG ===
@@ -7756,7 +7756,7 @@ void updateGif();
 
 // === SETUP ===
 
-void setup() {
+
 void setup() {
     Serial.begin(115200);
     delay(200);
@@ -7791,7 +7791,6 @@ void setup() {
     oledOne.display();
     delay(500);
 }
-}
 
 
 //  === MAIN LOOP ===
@@ -7812,27 +7811,26 @@ void loop() {
 }
 
 // === WIFI / TIME HELPERS ===
-void connectWiFi() {
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(WIFI_SSID, WIFI_PASS);
-  Serial.print("Connecting to WiFi");
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-  Serial.println("\nWiFi connected");
+void connectWIFI(){
+	WIFI.mode(WIFI_STA);
+	WIFI.begin(WIFI_SSID, WIFI_PASS); // called from prior lines
+
+	Serial.print("Connecting to WIFI");
+	while (WIFI.status() != WL_CONNECTED) {
+		delay(500);
+		Serial.print(".") // this will be loading dots.
+	}
+	Serial.println("\nWIFI connected!") // will skip a line and print once connected. 
 }
 
-void setupTime() {
-  configTime(GMT_OFFSET_SEC, DST_OFFSET, "pool.ntp.org", "time.nist.gov");
-
-  struct tm timeinfo;
-  Serial.print("Waiting for time");
-  while (!getLocalTime(&timeinfo)) {
-    Serial.print(".");
-    delay(500);
-  }
-  Serial.println("\nTime acquired");
+void setupTime(){
+	configTime(GMT_OFFSET_SEC, DST_OFFSET_SEC, "pool.ntp.org", "time.nist.gov");
+	Serial.println("Waiting for time...")
+	while (!getLocalTime(&timeinfo)) {
+		delay(500);
+		Serial.print(".") // this will be loading dots.
+}
+Serial.println("\nTime synced!")
 }
 
 // === CLOCK / ANNIVERSARY ===
